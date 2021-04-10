@@ -1,10 +1,45 @@
-import React from 'react'
+import React, { useRef } from 'react';
+import OTPInput from 'react-otp-pin-code';
+import './App.css';
 
-import { ExampleComponent } from 'react-otp-pin-code'
-import 'react-otp-pin-code/dist/index.css'
+const App: React.FC = () => {
+  const refInput = useRef<any>(null)
+  return (
+    <div className="App">
+      - Number OTP:
+      <OTPInput
+        ref={refInput}
+        autoFocus
+        isNumberInput
+        length={4}
+        className="otpContainer"
+        inputClassName="otpInput"
+        onChangeOTP={(otp: any) => {
+          console.log('String OTP: ', otp)
+          if (otp.length === 4) {
+            setTimeout(() => {
+              refInput?.current?.clear()
+            }, 1000)
+          }
+        }}
+      />
+      - String OTP:
+      <OTPInput
+        autoFocus
+        length={4}
+        className="otpContainer"
+        inputClassName="otpInput"
+        onChangeOTP={(otp: any) => {
+          console.log('String OTP: ', otp)
+          if (otp.length === 4) {
+            setTimeout(() => {
+              refInput?.current?.clear()
+            }, 1000)
+          }
+        }}
+      />
+    </div>
+  );
+};
 
-const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
-}
-
-export default App
+export default App;
