@@ -7,7 +7,8 @@ import React, {
   useCallback,
   CSSProperties,
   forwardRef,
-  useImperativeHandle
+  useImperativeHandle,
+  useRef
 } from 'react'
 import SingleInput from './component/SingleInput'
 
@@ -41,14 +42,22 @@ export const OTPInputComponent = forwardRef(
 
     const [activeInput, setActiveInput] = useState(0)
     const [otpValues, setOTPValues] = useState(Array<string>(length).fill(''))
+    const inputRef = useRef<HTMLInputElement>(null)
 
-    useImperativeHandle(ref, () => ({
-      clear: () => {
-        const updatedOTPValues = [...otpValues]
-        setOTPValues(updatedOTPValues.fill(''))
-        setActiveInput(0)
-      }
-    }))
+    useImperativeHandle(
+      ref,
+      () => ({
+        clear: () => {
+          const updatedOTPValues = [...otpValues]
+          setOTPValues(updatedOTPValues.fill(''))
+          setActiveInput(0)
+        },
+        blur: () => {
+          inputRef.current && inputRef.current.blur()
+        }
+      }),
+      [ref]
+    )
 
     // Helper to return OTP from inputs
     const handleOtpChange = useCallback(
@@ -206,6 +215,7 @@ export const OTPInputComponent = forwardRef(
           .fill('')
           .map((_, index) => (
             <SingleInput
+              ref={inputRef}
               key={`SingleInput-${index}`}
               focus={activeInput === index}
               value={otpValues && otpValues[index]}

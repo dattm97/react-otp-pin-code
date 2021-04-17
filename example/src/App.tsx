@@ -17,9 +17,16 @@ const App: React.FC = () => {
         onChangeOTP={(otp: any) => {
           console.log('String OTP: ', otp)
           if (otp.length === 4) {
-            setTimeout(() => {
-              refInput?.current?.clear()
-            }, 1000)
+            if (otp !== '1234') {
+              setTimeout(() => {
+                refInput.current.blur()
+              }, 500)
+            } else {
+              setTimeout(() => {
+                refInput?.current?.clear()
+              }, 1000)
+            }
+
           }
         }}
       />

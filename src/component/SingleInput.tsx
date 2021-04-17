@@ -1,5 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { memo, useRef, useLayoutEffect } from 'react'
+import React, {
+  memo,
+  useLayoutEffect,
+  forwardRef,
+  useImperativeHandle,
+  useRef
+} from 'react'
 import usePrevious from '../hooks/usePrevious'
 
 export interface SingleOTPInputProps
@@ -7,24 +13,36 @@ export interface SingleOTPInputProps
   focus?: boolean
 }
 
-export function SingleOTPInputComponent(props: SingleOTPInputProps) {
-  const { focus, autoFocus, ...rest } = props
-  const inputRef = useRef<HTMLInputElement>(null)
-  const prevFocus = usePrevious(!!focus)
-  useLayoutEffect(() => {
-    if (inputRef.current) {
-      if (focus && autoFocus) {
-        inputRef.current.focus()
-      }
-      if (focus && autoFocus && focus !== prevFocus) {
-        inputRef.current.focus()
-        inputRef.current.select()
-      }
-    }
-  }, [autoFocus, focus, prevFocus])
+export const SingleOTPInputComponent = forwardRef(
+  (props: SingleOTPInputProps, ref: any) => {
+    const { focus, autoFocus, ...rest } = props
+    const inputRef = useRef<HTMLInputElement>(null)
+    const prevFocus = usePrevious(!!focus)
 
-  return <input ref={inputRef} {...rest} />
-}
+    useImperativeHandle(
+      ref,
+      () => ({
+        blur: () => {
+          inputRef.current && inputRef.current.blur()
+        }
+      }),
+      [ref]
+    )
+    useLayoutEffect(() => {
+      if (inputRef.current) {
+        if (focus && autoFocus) {
+          inputRef.current.focus()
+        }
+        if (focus && autoFocus && focus !== prevFocus) {
+          inputRef.current.focus()
+          inputRef.current.select()
+        }
+      }
+    }, [autoFocus, focus, prevFocus])
+
+    return <input id='input' ref={inputRef} {...rest} />
+  }
+)
 
 const SingleOTPInput = memo(SingleOTPInputComponent)
 export default SingleOTPInput
