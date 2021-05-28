@@ -19,14 +19,12 @@ const App: React.FC = () => {
           if (otp.length === 4) {
             if (otp !== '1234') {
               setTimeout(() => {
-                refInput.current.blur()
-              }, 500)
-            } else {
-              setTimeout(() => {
                 refInput?.current?.clear()
               }, 1000)
+              // setTimeout(() => {
+              //   refInput.current.blur()
+              // }, 1100)
             }
-
           }
         }}
       />

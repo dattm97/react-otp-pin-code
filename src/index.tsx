@@ -50,7 +50,8 @@ export const OTPInputComponent = forwardRef(
         clear: () => {
           const updatedOTPValues = [...otpValues]
           setOTPValues(updatedOTPValues.fill(''))
-          setActiveInput(0)
+          inputRef.current && inputRef.current.blur()
+          // setActiveInput(0)
         },
         blur: () => {
           inputRef.current && inputRef.current.blur()
